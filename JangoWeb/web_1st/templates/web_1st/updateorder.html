@@ -1,0 +1,39 @@
+{% extends "web_1st/index.html" %}
+
+{% block title %}更新订单{% endblock title %}
+
+{% block content %}
+    <br/>
+    <div style="height: 100px;"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div  class="col-md-3"></div>
+            <div  class="col-md-5">
+                <div class="card">
+                    <div class="card-header text-center" style="color: purple; background-color: cornflowerblue;">
+                      <h4>更新订单</h4>
+                    </div>
+                    <div class="card-body" style="background-color: blanchedalmond;">
+                        <form action="{% url 'webapp:updateorder' order.id%}" method="post">
+                            {% csrf_token %}
+                            {{ o_form.as_p }}
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-3 text-center">
+                                    <button type="submit" name="q-button" class="btn btn-info">取消</button>
+                                </div>
+                                <div class="col-md-2"></div>
+                                <div class="col-md-3 text-center">
+                                    <button type="submit" name="s-button" class="btn btn-warning">确定</button>
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div  class="col-md-4"></div>
+        </div>
+    </div>
+
+{% endblock %}

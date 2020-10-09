@@ -1,0 +1,208 @@
+{% extends "web_1st/index.html" %} {% block title %}首页{% endblock title %}
+{% block content %}
+<div style="height: 30px"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card bg-info shadow text-center">
+        <div class="card-header">
+          <h4 class="card-title">Total Order</h4>
+        </div>
+        <div class="card-body">
+          <h3>{{ total_count }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info shadow text-center">
+        <div class="card-header">
+          <h4>Delivered Order</h4>
+        </div>
+        <div class="card-body">
+          <h3>{{ delivered_count }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info shadow text-center">
+        <div class="card-header">
+          <h4>Out for delivery Order</h4>
+        </div>
+        <div class="card-body">
+          <h3>{{ out_for_delivery_count }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info shadow text-center">
+        <div class="card-header">
+          <h4>Pending Order</h4>
+        </div>
+        <div class="card-body">
+          <h3>{{ pending_count }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr />
+<div style="height: 30px"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Total Customers: {{ c_count }}</h2>
+    </div>
+    <div class="col-md-6">
+      <a href="{% url 'webapp:create' %}" class="btn btn-outline-primary"
+        >Create Customer or Order</a
+      >
+    </div>
+  </div>
+</div>
+<hr />
+<div style="height: 30px"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6 text-center">
+      <h4>Customer</h4>
+
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Email</th>
+            <th scope="col">View</th>
+              <th scope="col">Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in customer reversed %}
+          <tr>
+            <td scope="row">{{ i.name }}</td>
+            <td>{{ i.phone }}</td>
+            <td>{{ i.email }}</td>
+            <td>
+                <a href="{% url 'webapp:viewcustomer' i.id %}">
+                   <button class="btn btn-primary btn-sm">view</button>
+                </a>
+            </td>
+          <td>
+              <button type="button" class="btn btn-danger btn-sm" id="{{ i.id }}-customer-del">remove</button>
+          </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-6 text-center">
+      <h4>Last 5 Orders</h4>
+
+      <table class="table table-striped">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Time</th>
+            <th scope="col">Category</th>
+            <th scope="col">Update</th>
+            <th scope="col">Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in order %}
+          <tr>
+            <td>{{ i.product }}</td>
+            <td>{{ i.customer }}</td>
+            <td>{{ i.time_created }}</td>
+            <td>{{ i.status }}</td>
+            <td>
+                <a href="{% url 'webapp:updateorder' i.id %}">
+                    <button type="submit" class="btn btn-sm btn-warning">update</button>
+                </a>
+            </td>
+            <td>
+{#                <a href="{% url 'webapp:deleteorder' i.id %}">#}
+                <button type="button" id="{{ i.id }}-del" class="btn btn-sm btn-danger">remove</button>
+{#                </a>#}
+{#                注意由于script的无效性导致的，django没有反应，ok!!#}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
+
+{% block javascript %}
+{#    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>#}
+    {% load static %}    {# 注意使用jquery之前都需要导入jquery，即使父类已经导入jquery #}
+    <script src="{% static '/js/jquery-3.5.1.min.js' %}"></script>
+    <script>
+        {% for i in order %}
+            $(document).ready(function(){
+                $("#{{ i.id }}-del").click(function () {
+                    let r = confirm('你确定要删除这个订单吗?');
+                    if (r){
+                        $.ajaxSetup({
+                            data:{
+                                csrfmiddlewaretoken:"{{ csrf_token }}",
+{#                                {{ csrf_token }}和{% csrf_token %}的区别，后者渲染成标签，前者只有值#}
+                            }
+                        });
+                        $.ajax({
+                            type: 'POST',
+                            url: "{% url 'webapp:homepage' %}",
+                            data: {
+                                'i-del': {{ i.id }},
+                            },
+                            dataType: 'text',
+                            success: function (response) {
+                                console.log(response);
+                                window.location.reload()
+                            },
+                            error: function () {
+                                console.log('Something is wrong!!!')
+                            }
+                        });
+                    }
+                })
+            });
+        {% endfor %}
+
+        {% for j in customer reversed %}
+            $(document).ready(function () {
+                $('#{{ j.id }}-customer-del').click(function () {
+                    let r=confirm('你确定要删除这个用户吗?');
+                    if(r){
+                        $.ajaxSetup({
+                            data:{
+                                csrfmiddlewaretoken: "{{ csrf_token }}",
+                            }
+                        });
+                        $.ajax({
+                            type:'POST',
+                            url: "{% url 'webapp:homepage' %}",
+                            data: {
+                                'j-customer-del':{{ j.id }},
+                            },
+                            dataType: 'text',
+                            success: function(){
+                                window.location.reload()
+                            },
+                            error: function(){
+                                console.log('Errors occur when deleting customer!!!')
+                            }
+                        })
+                    }
+                })
+            });
+
+        {% endfor %}
+    </script>
+
+{% endblock %}

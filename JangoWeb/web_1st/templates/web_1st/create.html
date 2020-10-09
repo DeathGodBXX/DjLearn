@@ -1,0 +1,48 @@
+{% extends "web_1st/index.html" %} {% block title %}创建{% endblock title %}
+{%block content %}
+<div class="container-fluid">
+  <div style="height: 100px"></div>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-4">
+      <div class="card" style="background-color: blanchedalmond">
+        <div class="card-header text-center" style="color: purple">
+          <h4 class="">Create Customer</h4>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'webapp:create' %}" method="post">
+            {% csrf_token %} {{ c_form.as_p }}
+            <div class="text-center">
+              <button
+                type="submit"
+                name="c-button"
+                class="btn btn-outline-primary"
+              >
+                提交
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-4">
+      <div class="card" style="background-color: blanchedalmond">
+        <div class="card-header text-center" style="color: purple">
+          <h4>Create Order</h4>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'webapp:create' %}" method="post">
+              {% csrf_token %}
+              {{ o_form.as_p }}
+            <div class="text-center">
+              <button type="submit" name="o-button" class="btn btn-outline-primary">提交</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+{% endblock %}

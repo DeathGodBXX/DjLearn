@@ -1,4 +1,3 @@
-# DjLearn
 ## Django for a Arrangement System
 <br/><br/><br/>
 &nbsp;&nbsp; This is a customer,product and order system!

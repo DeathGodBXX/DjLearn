@@ -1,5 +1,5 @@
 # DjLearn
-&nbsp;&nbsp; django for a arrangement system
+<head>django for a arrangement system</head>
 <br/>
 &nbsp;&nbsp; This is a customer,product and order system!
 <br/>

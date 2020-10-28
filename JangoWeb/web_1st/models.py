@@ -10,6 +10,11 @@ class Customer(models.Model):
     email = models.EmailField()
     time_created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        db_table = 'customer'
+        verbose_name = '用户'
+        verbose_name_plural = verbose_name
+
     def __str__(self):
         return self.name
 
@@ -25,6 +30,11 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     time_created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        db_table = 'product'
+        verbose_name = '商品'
+        verbose_name_plural = verbose_name
+
     def __str__(self):
         return self.name
 
@@ -39,6 +49,11 @@ class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='p_order')
     status = models.CharField(max_length=30, choices=STATUS)
     time_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'order'
+        verbose_name = '订单'
+        verbose_name_plural = verbose_name
 
     def __str__(self):
         return self.status
